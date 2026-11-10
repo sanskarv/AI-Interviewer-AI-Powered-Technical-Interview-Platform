@@ -27,8 +27,9 @@ whose free plan is permanent and needs no credit card.
 2. **Push this repository to GitHub.**
 3. In Render: **New -> Blueprint**, select the repo. Render reads `render.yaml`
    and creates two web services.
-4. When prompted, fill in `DATABASE_URL` (the Neon string), `GEMINI_API_KEY`
-   and `DEEPGRAM_API_KEY`. `OPENAI_KEY` can stay empty. Leave
+4. When prompted, fill in `DATABASE_URL` (the Neon string), `GEMINI_API_KEY`,
+   `DEEPGRAM_API_KEY` and `GITHUB_TOKEN` (see Environment variables below).
+   `OPENAI_KEY` can stay empty. Leave
    `BUN_PUBLIC_BACKEND_URL` empty for now.
 5. After the backend finishes deploying, copy its URL
    (`https://ai-interviewer-backend-xxxx.onrender.com`), open the frontend
@@ -71,6 +72,7 @@ the env vars from the table above.
 - `DEEPGRAM_API_KEY`: Deepgram, used to mint short-lived browser tokens.
 - `OPENAI_KEY`: optional, only for `POST /api/v1/session/:id` (OpenAI Realtime).
 - `PROXY_URL`: optional HTTPS proxy for GitHub API calls.
+- `GITHUB_TOKEN`: optional but strongly recommended on Render or any shared host. Unauthenticated GitHub API calls are limited to 60 per hour per IP, and the IP is shared, so interviews fail with "Failed to create interview" without it. A fine-grained personal access token with no extra permissions (public repos only) raises the limit to 5000 per hour: https://github.com/settings/personal-access-tokens/new
 - `PORT`: port each service listens on (defaults: backend 3001, frontend 3000).
 - `BUN_PUBLIC_BACKEND_URL`: frontend only; inlined into the browser bundle
   when the frontend server starts, so change it and restart to take effect.

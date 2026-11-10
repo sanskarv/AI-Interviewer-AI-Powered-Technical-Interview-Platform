@@ -28,6 +28,7 @@ services:
       DEEPGRAM_API_KEY: ${DEEPGRAM_API_KEY}
       OPENAI_KEY: ${OPENAI_KEY:-}
       PROXY_URL: ${PROXY_URL:-}
+      GITHUB_TOKEN: ${GITHUB_TOKEN:-}
       PORT: 3001
     ports:
       - "3001:3001"
