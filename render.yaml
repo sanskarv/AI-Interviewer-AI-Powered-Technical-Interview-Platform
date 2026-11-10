@@ -1,0 +1,44 @@
+# Render Blueprint: https://render.com/docs/blueprint-spec
+# In the Render dashboard: New -> Blueprint -> pick this repository.
+# After the first deploy, set BUN_PUBLIC_BACKEND_URL on the frontend to the
+# backend service's public URL (https://<backend-name>.onrender.com) and
+# the secret API keys on the backend.
+databases:
+  - name: ai-interviewer-db
+    plan: free
+    databaseName: interviewer
+    user: interviewer
+
+services:
+  - type: web
+    name: ai-interviewer-backend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./apps/backend/Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ai-interviewer-db
+          property: connectionString
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DEEPGRAM_API_KEY
+        sync: false
+      - key: OPENAI_KEY
+        sync: false
+      - key: PORT
+        value: 3001
+
+  - type: web
+    name: ai-interviewer-frontend
+    runtime: docker
+    plan: free
+    dockerfilePath: ./apps/frontend/Dockerfile
+    dockerContext: .
+    envVars:
+      - key: BUN_PUBLIC_BACKEND_URL
+        sync: false
+      - key: PORT
+        value: 3000

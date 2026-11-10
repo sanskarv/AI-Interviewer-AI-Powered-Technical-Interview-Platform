@@ -545,8 +545,14 @@ app.get(
     },
 );
 
-app.listen(3001, () => {
+app.get("/health", (_req, res) => {
+    res.json({ status: "ok" });
+});
+
+const PORT = Number(process.env.PORT) || 3001;
+
+app.listen(PORT, () => {
     console.log(
-        "🚀 Backend running at http://localhost:3001",
+        `Backend running on port ${PORT}`,
     );
 });

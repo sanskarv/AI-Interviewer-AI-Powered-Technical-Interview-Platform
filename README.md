@@ -99,6 +99,14 @@ apps/backend/.env
 DATABASE_URL="your_postgresql_connection_string"
 GEMINI_API_KEY="your_gemini_api_key"
 DEEPGRAM_API_KEY="your_deepgram_api_key"
+OPENAI_KEY="optional_openai_key"   # only for the OpenAI Realtime route
+
+See `apps/backend/.env.example`.
+
+## ☁️ Deployment
+
+Dockerfiles for both apps, a `docker-compose.yml` and a Render blueprint (`render.yaml`) are included.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for Render, Docker Compose and other hosts.
 
 ## 🚀 Installation
 

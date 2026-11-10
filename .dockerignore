@@ -1,0 +1,12 @@
+.git
+.claude
+.turbo
+**/node_modules
+**/dist
+**/out
+**/.env
+**/.env.*
+!**/.env.example
+apps/backend/generated
+**/*.log
+.DS_Store

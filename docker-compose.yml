@@ -1,0 +1,53 @@
+# Local or single-server deployment: Postgres + backend + frontend.
+#   cp .env.example .env   (fill in the API keys)
+#   docker compose up --build
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: interviewer
+      POSTGRES_PASSWORD: interviewer
+      POSTGRES_DB: interviewer
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U interviewer -d interviewer"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/Dockerfile
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://interviewer:interviewer@db:5432/interviewer
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      DEEPGRAM_API_KEY: ${DEEPGRAM_API_KEY}
+      OPENAI_KEY: ${OPENAI_KEY:-}
+      PROXY_URL: ${PROXY_URL:-}
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/Dockerfile
+    restart: unless-stopped
+    environment:
+      # Must be reachable from the user's browser, not from inside Docker.
+      BUN_PUBLIC_BACKEND_URL: ${BUN_PUBLIC_BACKEND_URL:-http://localhost:3001}
+      PORT: 3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
